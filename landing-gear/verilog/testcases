@@ -1,0 +1,108 @@
+1. Test for proper operation
+  A. Test all state transitions in as few cases as possible
+     16 transitions, 7 additional remain in place
+
+    Case #1 - TAXI-TUP-TDN-TUP-TAXI-TDN-TAXI-TDN-GOUP-FLYUP-GODN-FLYDN-TAXI 
+    10000 TAXI-TUP
+    10001 TUP-TDN
+    10000 TDN-TUP
+    10100 TUP-TAXI
+    10001 TAXI-TDN
+    10100 TDN-TAXI
+    10001 TAXI-TDN
+    00010 TDN-GOUP
+    01010 GOUP-FLYUP
+    00011 FLYUP-GODN
+    10011 GODN-FLYDN
+    10100 FLYDN-TAXI
+
+    Case #2 - TAXI-TUP-GOUP-FLYUP-GODN-TAXI
+    10000 TAXI-TUP
+    00010 TUP-GOUP
+    01010 GOUP-FLYUP
+    00011 FLYUP-GODN
+    10100 GODN-TAXI
+
+    Case #3 - TAXI-TDN-GOUP-FLYUP-GODN-TAXI
+    10001 TAXI-TDN
+    00010 TDN-GOUP
+    01010 GOUP-FLYUP
+    00011 FLYUP-GODN
+    10100 GODN-TAXI
+    
+    Case #4 - TAXI-TUP-FLYDN-GOUP-FLYUP-GODN-TAXI
+    10000 TAXI-TUP
+    10011 TUP-FLYDN
+    00010 FLYDN-GOUP
+    01010 GOUP-FLYUP
+    00011 FLYUP-GODN
+    10100 GODN-TAXI
+
+    Case #5 - TAXI-TDN-FLYDN-TAXI
+    10001  TAXI-TDN
+    10011  TDN-FLYDN
+    10100  FLYDN-TAXI
+
+2. Test for transition or remain-in-place as appropriate for don't care inputs
+  A. TimeUp and PilotLever are don't cares when transitioning to TAXI
+
+    Case #6 - TAXI-TUP-TAXI (other 3 cases)
+    10000 10000 10000 TAXI-TUP
+    10101 10110 10111 TUP-TAXI
+
+    Case #7 - TAXI-TDN-TAXI (other 3 cases)
+    10001 10001 10001 TAXI-TDN
+    10101 10110 10111 TDN-TAXI
+
+    Case #8 - TAXI-TDN-FLYDN-TAXI (other 3 cases)
+    10001 10001 10001 TAXI-TDN
+    10011 10011 10011 TDN-FLYDN
+    10101 10110 10111 FLYDN-TAXI
+
+    Case #9 - TAXI-TUP-GOUP-FLYUP-GODN-TAXI (other 3 cases)
+    10000 10000 10000 TAXI-TUP
+    00010 00010 00010 TUP-GOUP
+    01010 01010 01010 GOUP-FLYUP
+    00011 00011 00011 FLYUP-GODN
+    10101 10110 10111 GODN-TAXI
+
+  B. Timer is ignored even if accidentally reset during flight until landing
+
+    Case #10 - TAXI-TUP-TUP-GOUP-GOUP-FLYUP-FLYUP-GODN-GODN-TAXI
+    10000 TAXI-TUP
+    00000 TUP-TUP
+    00010 TUP-GOUP
+    00000 GOUP-GOUP
+    01010 GOUP-FLYUP
+    01000 FLYUP-FLYUP
+    00011 FLYUP-GODN
+    00001 GODN-GODN
+    10100 GODN-TAXI 
+
+  C. Pilot lever is ignored during gear extension/retraction
+     If Lever is only input to change in GOUP or GODN, stay in GOUP or GODN
+    
+    Case #11 - TAXI-TUP-GOUP-GOUP-FLYUP-GODN-GODN-TAXI
+    10000 TAXI-TUP
+    00010 TUP-GOUP
+    00011 GOUP-GOUP
+    01010 GOUP-FLYUP
+    00011 FLYUP-GODN
+    00010 GODN-GODN
+    10100 GODN-TAXI
+
+3. Test for physical destruction and add an ERROR state
+  A. Landing with gear up from FLYUP or GOUP
+    Actual implementation just assumes broken PlaneOnGround indicator.
+
+    Case #12 - Landing with gear up from FLYUP
+    10000 TAXI-TUP
+    00010 TUP-GOUP
+    01010 GOUP-FLYUP
+    01100 FLYUP-CRASH
+
+    Case #13 - Landing with gear up from GOUP
+    10000 TAXI-TUP
+    00010 TUP-GOUP
+    01100 GOUP-CRASH
+
