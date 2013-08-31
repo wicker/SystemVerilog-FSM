@@ -5,5 +5,6 @@ Two simple Moore-type finite state machines initally written in Verilog and then
 
 ### License
 
-This work is copyright Jenner "wicker" Hanni, 2013. <jeh.wicker@gmail.com>.
+This work is copyright 2013 by Jenner "wicker" Hanni, jeh.wicker@gmail.com.
+ 
 It is released under the 3-clause BSD license.
